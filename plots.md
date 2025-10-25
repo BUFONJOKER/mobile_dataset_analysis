@@ -1,7 +1,7 @@
 
 ---
 
-# 🎨 **📊 Seaborn Plot Cheat Sheet (for Your Dataset)**
+# 🎨 **📊 Seaborn Plot Cheat Sheet**
 
 ---
 
