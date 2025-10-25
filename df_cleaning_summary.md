@@ -1,4 +1,3 @@
-Here’s a **clear, structured summary** of what your notebook does step-by-step 👇
 
 ---
 
@@ -167,5 +166,3 @@ After all transformations:
 * Price vs. specs modeling or prediction
 
 ---
-
-Would you like me to create a **visual summary (flowchart)** or **short markdown version (for README)** of this analysis?
