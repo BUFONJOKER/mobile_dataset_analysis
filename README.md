@@ -1,176 +1,261 @@
 
 ---
 
-# 📱 **Mobile Dataset Analysis and Visualization**
+# 📱 Mobile Dataset Analysis and Visualization
 
-## 🧭 **Project Overview**
+## 🧭 Project Overview
+The **Mobile Dataset Analysis and Visualization** project focuses on exploring and modeling smartphone data to extract insights about mobile specifications, performance, and pricing.  
+It follows a complete **Data Science Lifecycle**, including:
 
-The **Mobile Dataset Analysis and Visualization** project focuses on understanding, cleaning, and modeling data related to smartphones. The goal is to extract **valuable insights** about mobile features, performance, and pricing, and to build predictive models that can help in decision-making — for instance, predicting mobile prices or identifying factors influencing high-end phones.
+- Data preprocessing and feature engineering  
+- Exploratory data analysis (EDA) and visualization  
+- Model training, tuning, and evaluation  
+- Deployment via an interactive web app  
 
-This project follows a complete **Data Science Lifecycle**, including:
-
-* **Data Preprocessing** – preparing the raw dataset for analysis
-* **Exploratory Data Analysis (EDA)** – discovering hidden trends and relationships
-* **Model Building and Evaluation** – creating and assessing machine learning models
-* **Deployment** – making the final model accessible through an interactive web interface
+The primary goal is to build predictive models (e.g., price prediction or classification of mobile categories) and present insights through visualizations and dashboards.
 
 ---
 
-## ⚙️ **Workflow**
+## ⚙️ Workflow
 
-### 1. 🧹 **Data Preprocessing**
+### 1. 🧹 Data Preprocessing
+Data preprocessing ensures that the dataset is clean, consistent, and analysis-ready.
 
-Data preprocessing ensures that the dataset is accurate, consistent, and ready for analysis.
-Key steps include:
-
-* **Handling Missing Values:**
-  Missing data is identified using functions like `df.isnull().sum()` and handled through imputation (mean/median/mode) or row/column removal, depending on data importance.
+**Key steps:**
+- **Handling Missing Values:**  
+  Missing or null data is treated via imputation (mean, median, or mode) or dropped if irrelevant.  
+  ```python
+  df['Launched Price (Pakistan USD)'].fillna(df['Launched Price (Pakistan USD)'].median(), inplace=True)
+````
 
 * **Removing Duplicates:**
-  Duplicated entries (such as repeated models or same-price records) are detected using `df.duplicated()` and dropped to avoid bias.
+
+  ```python
+  df.drop_duplicates(inplace=True)
+  ```
 
 * **Data Type Conversion:**
-  Columns like “Launched Price” may contain symbols (e.g., `$`, `₹`), which are cleaned using regular expressions before converting them to numerical data types.
+
+  ```python
+  df[col] = df[col].astype(str).str.replace(r'\D', '', regex=True).astype('int64')
+  ```
 
 * **Feature Engineering:**
 
-  * Creating new features (e.g., *Pixel Density*, *Price-to-Performance Ratio*).
-  * Encoding categorical variables (e.g., *Company Name*, *Processor*) using one-hot encoding or label encoding.
+  * Create new features like `Price_to_Performance_Ratio`, `Pixel_Density`, etc.
+  * Encode categorical variables (e.g., *Company Name*, *Processor*).
 
 * **Normalization and Scaling:**
-  Scaling numeric columns (like *RAM*, *Battery Capacity*, *Screen Size*) ensures that large-scale features do not dominate small-scale ones in model training.
+  Scale numerical data to ensure uniform contribution of all features.
 
 ---
 
-### 2. 🔍 **Exploratory Data Analysis (EDA)**
+### 2. 🔍 Exploratory Data Analysis (EDA)
 
-EDA helps uncover patterns and relationships within the dataset. Visualizations are created using **Matplotlib** and **Seaborn**.
+EDA helps discover trends, correlations, and feature relationships.
 
-* **Univariate Analysis (Single Feature):**
+**Common visualizations:**
 
-  * Histograms and KDE plots show feature distributions (e.g., *Price*, *Battery Capacity*).
-  * Boxplots detect outliers.
-    Example: `sns.boxplot(x='Battery Capacity', data=df)`
+* **Univariate:** Histograms, boxplots, KDE plots
+* **Bivariate:** Scatterplots, barplots
+* **Multivariate:** Heatmaps, pairplots
 
-* **Bivariate Analysis (Two Features):**
+**Examples:**
 
-  * Scatter plots reveal relationships between *Screen Size* and *Launched Price*.
-  * Bar charts compare *Average Price* by *Company Name*.
-    Example: `sns.barplot(x='Company Name', y='Launched Price', data=df)`
+```python
+sns.barplot(x='Company Name', y='Launched Price (Pakistan USD)', data=df)
+sns.heatmap(df.corr(), annot=True, cmap='coolwarm')
+```
 
-* **Multivariate Analysis:**
-
-  * Heatmaps display correlations between numerical features.
-  * Pairplots visualize feature interactions.
-    Example: `sns.heatmap(df.corr(), annot=True, cmap='coolwarm')`
-
-* **Trend Analysis:**
-  Detects which features most influence pricing — e.g., *Processor Type* and *RAM Size* often have strong positive correlations with *Price*.
+EDA identifies key factors influencing mobile prices — such as **RAM**, **Processor**, and **Battery Capacity**.
 
 ---
 
-### 3. 🤖 **Model Building**
+### 3. 🤖 Model Building
 
-This stage involves building predictive models using **Scikit-learn**. The process includes:
+Models are built using **Scikit-learn** for regression or classification tasks.
 
-* **Feature Selection:**
-  Identifying the most relevant features through correlation analysis, recursive feature elimination (RFE), or tree-based feature importance.
+**Steps:**
 
-* **Splitting Dataset:**
-  Using `train_test_split()` to divide data into training and testing sets for unbiased model evaluation.
+```python
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+```
 
-* **Algorithm Selection:**
-  Different models are trained based on the problem:
+**Example (Random Forest Regressor):**
 
-  * **Regression:** Linear Regression, Decision Tree Regressor, Random Forest Regressor
-  * **Classification (if applicable):** Logistic Regression, SVM, KNN, etc.
+```python
+from sklearn.ensemble import RandomForestRegressor
+model = RandomForestRegressor()
+model.fit(X_train, y_train)
+```
 
-* **Hyperparameter Tuning:**
-  Applying GridSearchCV or RandomizedSearchCV to optimize parameters for better accuracy and reduced overfitting.
-
-Example:
+**Hyperparameter Tuning:**
 
 ```python
 from sklearn.model_selection import GridSearchCV
-grid = GridSearchCV(RandomForestRegressor(), param_grid, cv=5)
+grid = GridSearchCV(model, param_grid={'n_estimators':[100,200]}, cv=5)
 grid.fit(X_train, y_train)
 ```
 
 ---
 
-### 4. 📊 **Model Evaluation**
+### 4. 📊 Model Evaluation
 
-After training, models are tested using various evaluation metrics to determine their effectiveness.
+Evaluate model accuracy and generalization using appropriate metrics.
 
-* **Regression Metrics:**
+**Regression Metrics:**
 
-  * Mean Absolute Error (MAE)
-  * Mean Squared Error (MSE)
-  * R² Score
+* Mean Absolute Error (MAE)
+* Mean Squared Error (MSE)
+* R² Score
 
-* **Classification Metrics (if classification task):**
+**Classification Metrics:**
 
-  * Accuracy
-  * Precision, Recall, F1-Score
-  * Confusion Matrix and ROC-AUC Curve
+* Accuracy
+* Precision, Recall, F1-score
+* Confusion Matrix / ROC-AUC
 
-* **Model Comparison:**
-  All trained models are compared side-by-side to identify the most efficient and accurate one.
-
-Example:
+**Example:**
 
 ```python
-from sklearn.metrics import r2_score, mean_absolute_error
-print("R² Score:", r2_score(y_test, y_pred))
+from sklearn.metrics import mean_absolute_error, r2_score
+print("MAE:", mean_absolute_error(y_test, y_pred))
+print("R²:", r2_score(y_test, y_pred))
 ```
 
 ---
 
-### 5. 🚀 **Model Deployment**
+### 5. 🚀 Model Deployment
 
-Once the best model is selected, it is deployed using **Streamlit**, allowing users to interact with it via a web interface.
+Deployment uses **Streamlit**, allowing users to interact with the model via a simple web UI.
 
-* **Model Serialization:**
-  The model is saved using `pickle` or `joblib` for later use:
+**Steps:**
 
-  ```python
-  import joblib
-  joblib.dump(model, 'final_model.pkl')
-  ```
+1. **Save model:**
 
-* **Building the Streamlit App:**
-  Users can input features (e.g., RAM, Camera, Battery) and get a predicted price or classification instantly.
+   ```python
+   import joblib
+   joblib.dump(model, 'final_model.pkl')
+   ```
+2. **Build Streamlit App:**
 
-* **Deployment and Maintenance:**
-  The app can be hosted on **Streamlit Cloud**, **Heroku**, or **Render**, with monitoring to track performance over time.
+   ```python
+   import streamlit as st
+   import joblib
+
+   model = joblib.load('final_model.pkl')
+   st.title("📱 Mobile Price Predictor")
+
+   ram = st.number_input("Enter RAM (GB):")
+   battery = st.number_input("Enter Battery Capacity (mAh):")
+
+   if st.button("Predict Price"):
+       prediction = model.predict([[ram, battery]])
+       st.success(f"Predicted Price: ${prediction[0]:.2f}")
+   ```
+3. **Run App:**
+
+   ```bash
+   streamlit run app.py
+   ```
 
 ---
 
-## 🛠️ **Technologies Used**
+## ⚡ How to Run the Project
 
-| Category                 | Tools / Libraries               |
-| ------------------------ | ------------------------------- |
-| **Programming Language** | Python                          |
-| **Data Handling**        | Pandas, NumPy                   |
-| **Visualization**        | Matplotlib, Seaborn             |
-| **Machine Learning**     | Scikit-learn                    |
-| **Model Deployment**     | Streamlit                       |
-| **Environment**          | Jupyter Notebook / Google Colab |
+### 🧰 1. Install `uv` (Python package manager)
+
+[`uv`](https://github.com/astral-sh/uv) is a fast package and environment manager for Python.
+
+Install it with:
+
+```bash
+pip install uv
+```
+
+or
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
 
 ---
 
-## ✅ **Conclusion**
+### 💾 2. Clone the Repository
 
-This project demonstrates a **comprehensive end-to-end data science workflow**, from raw data to a deployable machine learning model.
+```bash
+git clone https://github.com/<your-username>/mobile-dataset-analysis.git
+cd mobile-dataset-analysis
+```
 
-Key takeaways include:
+---
 
-* Data cleaning and preprocessing are crucial for reliable results.
-* EDA provides a clear understanding of feature relationships and their impact on price.
-* Machine learning models can effectively predict smartphone prices or classify devices into segments.
-* Streamlit offers a user-friendly interface for model deployment, making insights accessible to non-technical users.
+### 🔄 3. Sync and Install Dependencies
 
-Overall, the project combines **data engineering, statistical analysis, visualization, and predictive modeling** to provide actionable insights into the mobile market.
+Automatically create a virtual environment and install all required packages:
+
+```bash
+uv sync
+```
+
+This installs dependencies defined in `pyproject.toml` such as:
+
+* pandas
+* numpy
+* matplotlib
+* seaborn
+* scikit-learn
+* streamlit
+
+---
+
+### ▶️ 4. Run the Project
+
+Launch the Streamlit app:
+
+```bash
+streamlit run app.py
+```
+
+The app will open in your browser at:
+
+```
+http://localhost:8501
+```
+
+---
+
+## 🛠️ Technologies Used
+
+| Category             | Tools / Libraries               |
+| -------------------- | ------------------------------- |
+| **Language**         | Python                          |
+| **Data Handling**    | Pandas, NumPy                   |
+| **Visualization**    | Matplotlib, Seaborn             |
+| **Machine Learning** | Scikit-learn                    |
+| **Deployment**       | Streamlit                       |
+| **Package Manager**  | uv                              |
+| **Environment**      | Jupyter Notebook / Google Colab |
+
+---
+
+## ✅ Conclusion
+
+This project demonstrates an **end-to-end data science workflow**, from raw data to deployment.
+
+**Key Takeaways:**
+
+* Data cleaning and feature engineering are critical for model performance.
+* EDA helps interpret and visualize data effectively.
+* Model tuning ensures high accuracy and generalization.
+* Streamlit + uv simplify deployment and dependency management.
+
+By integrating data processing, modeling, and interactive deployment, this project provides actionable insights into smartphone market trends and price prediction.
+
+---
+
+```
 
 ---
 
