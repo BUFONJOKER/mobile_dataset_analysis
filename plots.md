@@ -1,5 +1,3 @@
-Perfect ⚡ — here’s a **visual-style Seaborn Plot Cheat Sheet** tailored **exactly to your dataset** — with your actual column names.
-It’s organized by relationship type (Categorical ↔ Categorical, Categorical ↔ Numerical, etc.) and includes *recommended sns plots + examples* for each.
 
 ---
 
@@ -82,5 +80,3 @@ It’s organized by relationship type (Categorical ↔ Categorical, Categorical 
 | **Multi-variable (3+)**       | `relplot`, `lmplot(hue=...)`, `pairplot`, `boxplot(hue=...)`, `facetgrid`              |
 
 ---
-
-Would you like me to make this into a **visual image-style cheat sheet (infographic/table)** — color-coded by type and ready to save?
