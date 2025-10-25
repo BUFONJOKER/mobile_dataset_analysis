@@ -1,4 +1,4 @@
----
+-
 
 # 🧩Data Overview
 
@@ -9,7 +9,7 @@
 
 ---
 
-# 🎨 ALL SEABORN PLOTS — With Examples for Columns
+# 🎨 ALL SEABORN PLOTS — With Examples from Columns
 
 ---
 
