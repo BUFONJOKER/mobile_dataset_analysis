@@ -210,7 +210,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 ### 💾 **2. Clone the Repository**
 
 ```bash
-git clone https://github.com/<your-username>/mobile-dataset-analysis.git
+git clone https://github.com/BUFONJOKER/mobile_dataset_analysis.git
 cd mobile-dataset-analysis
 ```
 
