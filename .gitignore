@@ -11,3 +11,6 @@ wheels/
 
 # add vscode folder
 .vscode/
+
+# add .csv files
+dataset/
